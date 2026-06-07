@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     MyFuture · STANDALONE TOOL · Lifestyle vs Wealth Explorer
+     "What lifestyle do you want? See the impact on your goals over time."
+     Live time-horizon + return-rate sliders, user-set target, load-example,
+     OUT/IN choices, bad-debt toggle, growth curve. Brand chrome + Discovery CTA.
+     ▼ FMA: illustrative explorer of how levers behave - NOT advice/forecast.
+       Anchored to a user-set example target, never "your future". LARA APPROVES figures. ▼
+     ============================================================ -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lifestyle vs Wealth Explorer | MyFuture</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+  :root{--p:#018ab5;--pd:#004357;--a:#ff914d;--ao:#cf6411;--m:#788c96;--ink:#10262e;--good:#0f6e56;--bad:#993c1d;--line:#dfeef3;--bg:#eef2f5;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Montserrat',sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;}
+  .mf-head{background:linear-gradient(135deg,var(--pd),var(--p));padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .mf-head .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:1.1rem;}
+  .mf-head .brand .logo{width:30px;height:30px;border-radius:7px;background:var(--a);display:grid;place-items:center;color:#2a1500;font-weight:800;}
+  .mf-head a.book{background:var(--a);color:#2a1500;text-decoration:none;font-weight:800;font-size:.8rem;padding:.55rem 1rem;border-radius:8px;}
+  .wrap{max-width:880px;margin:0 auto;padding:clamp(1.2rem,4vw,2.4rem) 1.1rem 3rem;}
+  .tool{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px -24px #00435730;}
+  .strip{background:linear-gradient(135deg,var(--pd),var(--p));padding:12px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;}
+  .strip span{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;}
+  .strip .ex{background:#ffffff22;border:1px solid #ffffff44;color:#fff;font-family:inherit;font-size:.7rem;font-weight:700;padding:.4rem .8rem;border-radius:7px;cursor:pointer;}
+  .strip .ex:hover{background:#ffffff33;}
+  .body{padding:clamp(1.3rem,3.5vw,2rem);border-left:5px solid var(--a);}
+  h1{font-size:clamp(1.4rem,3.2vw,1.9rem);font-weight:800;color:var(--pd);margin:0 0 .4rem;line-height:1.15;}
+  .sub{font-size:.95rem;color:#46606c;margin:0 0 1.3rem;max-width:64ch;line-height:1.6;}
+  .sub b{color:var(--ink);}
+  .controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:0 0 1.2rem;}
+  @media(max-width:620px){.controls{grid-template-columns:1fr;}}
+  .ctrl{background:#f6f9fb;border:1px solid var(--line);border-radius:11px;padding:.8rem .9rem;}
+  .ctrl label{display:block;font-size:.72rem;font-weight:700;color:var(--pd);margin:0 0 .5rem;}
+  .ctrl .v{font-weight:800;color:var(--p);}
+  .ctrl input[type=range]{width:100%;accent-color:var(--p);margin-top:.3rem;}
+  /* chart */
+  .chartwrap{background:#fafcfd;border:1px solid var(--line);border-radius:12px;padding:1rem 1rem .6rem;margin:0 0 1rem;}
+  .chartwrap svg{width:100%;height:170px;display:block;}
+  .chartkey{display:flex;gap:16px;justify-content:center;font-size:.72rem;color:var(--m);margin-top:.3rem;flex-wrap:wrap;}
+  .chartkey i{font-style:normal;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:middle;}
+  .tot{display:flex;align-items:baseline;gap:10px;background:#f3f8fa;border-radius:12px;padding:1rem 1.2rem;margin:0 0 14px;}
+  .tot .lab{font-size:.74rem;color:var(--m);}
+  #total{font-size:1.85rem;font-weight:800;color:var(--good);line-height:1.1;}
+  .tot .r{text-align:right;margin-left:auto;}
+  #delta{font-size:.95rem;font-weight:700;color:var(--m);}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:620px){.cols{grid-template-columns:1fr;}}
+  .coltt{font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin:0 0 .5rem;}
+  .list{display:flex;flex-direction:column;gap:7px;}
+  .chip{text-align:left;background:#f6f9fb;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-family:inherit;cursor:pointer;transition:all .15s;}
+  .chip .top{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:.78rem;color:#46606c;}
+  .chip .nm{display:flex;align-items:center;gap:7px;}
+  .chip .amt{font-weight:700;white-space:nowrap;}
+  .chip .bd{display:none;margin-top:7px;padding-top:7px;border-top:1px dashed var(--line);align-items:center;gap:6px;font-size:.7rem;color:var(--ao);}
+  .chip.on .bd{display:flex;}
+  .chip .bd input{accent-color:var(--ao);cursor:pointer;}
+  .chip .bd .ex{margin-left:auto;font-weight:700;color:var(--bad);}
+  details{margin-top:16px;border:1px solid var(--line);border-radius:10px;}
+  summary{cursor:pointer;padding:11px 14px;font-size:.78rem;font-weight:700;color:var(--p);list-style:none;}
+  summary::-webkit-details-marker{display:none;}
+  .acc{padding:0 14px 13px;font-size:.78rem;color:#46606c;line-height:1.6;}
+  .acc table{width:100%;font-size:.74rem;border-collapse:collapse;margin:.4rem 0;}
+  .acc th{text-align:left;font-weight:700;color:var(--m);padding:3px 0;}
+  .acc td{padding:3px 0;}
+  .acc .src{color:#9aa8b2;}
+  .illus{margin-top:12px;border-left:4px solid var(--a);padding:9px 13px;}
+  .illus .t{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ao);margin:0 0 2px;}
+  .illus .d{font-size:.72rem;color:var(--m);line-height:1.5;margin:0;}
+  .cta{text-align:center;margin-top:1.4rem;}
+  .cta a{display:inline-block;background:var(--a);color:#2a1500;font-weight:800;font-size:1rem;padding:.95rem 2rem;border-radius:11px;text-decoration:none;}
+  .cta .sub2{font-size:.78rem;color:var(--m);margin-top:.7rem;}
+  .mf-foot{background:var(--pd);color:#cfe9f3;text-align:center;padding:1.6rem 1.1rem;font-size:.8rem;line-height:1.6;}
+  .mf-foot a{color:#fff;font-weight:700;text-decoration:none;}
+  .mf-foot .small{color:#7fb4cb;font-size:.72rem;margin-top:.5rem;max-width:60ch;margin-inline:auto;}
+</style>
+</head>
+<body>
+  <header class="mf-head">
+    <div class="brand"><img src="myfuture_logo.svg" alt="MyFuture" style="height:32px;width:auto;display:block;"></div>
+    <a class="book" href="https://myfutureplan.zohobookings.com/#/4520372000003432002" target="_blank" rel="noopener">Book a free Discovery session</a>
+  </header>
+
+  <div class="wrap">
+    <div class="tool">
+      <div class="strip"><span>Free tool &middot; Lifestyle vs Wealth Explorer</span><button class="ex" id="loadEx"><i class="ti ti-wand" aria-hidden="true"></i> Load an example</button></div>
+      <div class="body">
+        <h1>What lifestyle do you want - and what's it worth over time?</h1>
+        <p class="sub">It's not about stopping lifestyle. It's about <b>pulling the levers on purpose</b> - what you spend, what you earn, and where your money sits. Set your horizon and return below, pick a target, then tick the choices and watch how they shape the picture over time. <b>Good money use compounds up; bad debt compounds down.</b></p>
+
+        <div class="controls">
+          <div class="ctrl"><label>Your wealth target: <span class="v" id="tgtV">$1,200,000</span></label><input id="tgt" type="range" min="200000" max="3000000" step="50000" value="1200000"></div>
+          <div class="ctrl"><label>Time horizon: <span class="v" id="yrsV">10 yrs</span></label><input id="yrs" type="range" min="5" max="25" step="1" value="10"></div>
+          <div class="ctrl"><label>Return rate: <span class="v" id="rateV">7%</span></label><input id="rate" type="range" min="4" max="10" step="0.5" value="7"></div>
+        </div>
+
+        <div class="chartwrap">
+          <svg id="chart" viewBox="0 0 600 170" preserveAspectRatio="none"></svg>
+          <div class="chartkey"><i><span class="dot" style="background:#9cc9d9"></span>Target path</i><i><span class="dot" style="background:var(--good)"></span>With your wealth choices</i><i><span class="dot" style="background:var(--bad)"></span>With your lifestyle choices</i></div>
+        </div>
+
+        <div class="tot">
+          <div><div class="lab">Adjusted position at <span id="totYrs">10</span> yrs</div><div id="total">$1,200,000</div></div>
+          <div class="r"><div class="lab">vs target</div><div id="delta">no change yet</div></div>
+        </div>
+
+        <div class="cols">
+          <div>
+            <div class="coltt" style="color:var(--ao)"><i class="ti ti-arrow-up-right" aria-hidden="true"></i> Lifestyle choices (OUT)</div>
+            <div class="list" id="outList"></div>
+          </div>
+          <div>
+            <div class="coltt" style="color:var(--good)"><i class="ti ti-trending-up" aria-hidden="true"></i> Wealth choices (IN)</div>
+            <div class="list" id="inList"></div>
+          </div>
+        </div>
+
+        <details>
+          <summary>How these numbers work (assumptions) &middot; tap to expand</summary>
+          <div class="acc">
+            <p style="margin:0 0 6px;">Lifestyle choices are an annual spend, redirected and compounded at your chosen return over your chosen horizon. NZ-typical averages:</p>
+            <table>
+              <tr><th>Lifestyle lever</th><th>~NZ avg / yr</th></tr>
+              <tr><td>Overseas family holiday</td><td>$10,000</td></tr>
+              <tr><td>Running a newer car</td><td>$9,000</td></tr>
+              <tr><td>Higher day-to-day lifestyle</td><td>$6,000</td></tr>
+              <tr><td>Private schooling</td><td>$18,000</td></tr>
+            </table>
+            <p style="margin:6px 0;"><b>Wealth choices</b> are a starting amount that compounds up at a historical long-run rate over the horizon: additional property ~6% (REINZ 30yr), shares/managed fund ~8% (NZX 50 long-run), starting sooner ~8%.</p>
+            <p style="margin:6px 0;"><b>Paid with bad debt?</b> If a lifestyle item is funded by consumer debt, you also pay interest - at NZ's average credit-card rate of <b>~19.7% p.a.</b> stacked on top. Same money, working against you twice.</p>
+            <p class="src">An illustrative tool showing how the levers behave - not a forecast of your situation. Sources: Stats NZ, AA / Consumer NZ, RBNZ (19.7%), REINZ (~6%), NZX 50 (~8%), MyFuture guide (7%).</p>
+          </div>
+        </details>
+
+        <div class="illus">
+          <p class="t">Illustration only</p>
+          <p class="d">An explorer that shows how lifestyle and wealth choices behave over time, using stated assumptions. It is not advice, not a forecast, and not specific to you. Your real numbers live in your MyPlan.</p>
+        </div>
+
+        <div class="cta">
+          <a href="https://myfutureplan.zohobookings.com/#/4520372000003432002" target="_blank" rel="noopener">Turn this into a real plan with a specialist</a>
+          <div class="sub2">Free &middot; no-obligation &middot; NZ-based advisers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mf-foot">
+    <div><a href="https://www.myfuture.co.nz" target="_blank" rel="noopener">myfuture.co.nz</a> &middot; Helping everyday Kiwis build financial freedom</div>
+    <div class="small">MyFuture is regulated by the FMA to provide financial advice. This tool is for general illustration only and does not constitute personalised financial advice.</div>
+  </footer>
+
+<script>
+(function(){
+  var BADRATE=0.197;
+  // OUT: [icon, name, annualSpend]
+  var OUT=[['ti-plane','Yearly overseas holidays',10000],['ti-car','Newer car, always',9000],['ti-shopping-bag','Higher lifestyle',6000],['ti-school','Private schooling',18000],['ti-sailboat','Boat / caravan',7000],['ti-tools','Regular renovations',12000]];
+  // IN: [icon, name, baseAmount, growthRate]
+  var IN=[['ti-building-community','An additional property',150000,0.06],['ti-chart-line','Shares / managed fund',80000,0.08],['ti-seeding','Started investing sooner',50000,0.08],['ti-coin','Dividend shares',60000,0.07],['ti-businessplan','Commercial property',200000,0.07]];
+
+  var tgt=document.getElementById('tgt'),yrs=document.getElementById('yrs'),rate=document.getElementById('rate');
+  var tgtV=document.getElementById('tgtV'),yrsV=document.getElementById('yrsV'),rateV=document.getElementById('rateV'),totYrs=document.getElementById('totYrs');
+  var outEl=document.getElementById('outList'),inEl=document.getElementById('inList');
+  var totalEl=document.getElementById('total'),deltaEl=document.getElementById('delta');
+  var chart=document.getElementById('chart');
+  var sel={},badDebt={};
+  function money(n){return '$'+Math.round(n).toLocaleString();}
+  function af(r,n){return (Math.pow(1+r,n)-1)/r;} // annuity factor
+  function Y(){return +yrs.value;} function R(){return +rate.value/100;}
+  // OUT compounded opportunity cost = annual spend as an annuity over horizon at rate
+  function outCost(annual){return annual*af(R(),Y());}
+  function badCost(annual){return annual*BADRATE*Y();}
+  // IN gain = base compounded over horizon at its own growth rate
+  function inGain(base,g){return base*Math.pow(1+g,Y())-base;}
+
+  function makeOut(item){
+    var key='out'+item[1];var b=document.createElement('div');b.className='chip';var col='#cf6411';
+    b.innerHTML='<div class="top"><span class="nm"><i class="ti '+item[0]+'" style="font-size:15px;color:'+col+'"></i>'+item[1]+'</span><span class="amt" data-amt="'+key+'" style="color:'+col+'">-'+money(outCost(item[2]))+'</span></div>'+
+      '<label class="bd"><input type="checkbox" data-bd="'+key+'"> Paid with bad debt? <span class="ex" data-ex="'+key+'"></span></label>';
+    b.querySelector('.top').addEventListener('click',function(){sel[key]=!sel[key];b.classList.toggle('on',sel[key]);
+      b.style.background=sel[key]?'#fbece7':'#f6f9fb';b.style.borderColor=sel[key]?col:'#dfeef3';update();});
+    var cb=b.querySelector('[data-bd]');
+    cb.addEventListener('click',function(e){e.stopPropagation();badDebt[key]=cb.checked;update();});
+    b.dataset.kind='out';b.dataset.key=key;b.dataset.annual=item[2];
+    return b;
+  }
+  function makeIn(item){
+    var key='in'+item[1];var b=document.createElement('div');b.className='chip';var col='#0f6e56';
+    b.innerHTML='<div class="top"><span class="nm"><i class="ti '+item[0]+'" style="font-size:15px;color:'+col+'"></i>'+item[1]+'</span><span class="amt" data-amt="'+key+'" style="color:'+col+'">+'+money(inGain(item[2],item[3]))+'</span></div>'+
+      '<div class="bd" style="color:#0f6e56;display:none"><span style="font-size:.66rem;color:#9aa8b2;">grows at '+(item[3]*100)+'% over your horizon</span></div>';
+    b.querySelector('.top').addEventListener('click',function(){sel[key]=!sel[key];b.classList.toggle('on',sel[key]);
+      b.style.background=sel[key]?'#e1f5ee':'#f6f9fb';b.style.borderColor=sel[key]?col:'#dfeef3';update();});
+    b.dataset.kind='in';b.dataset.key=key;b.dataset.base=item[2];b.dataset.g=item[3];
+    return b;
+  }
+  OUT.forEach(function(it){outEl.appendChild(makeOut(it));});
+  IN.forEach(function(it){inEl.appendChild(makeIn(it));});
+
+  function refreshChipAmounts(){
+    outEl.querySelectorAll('.chip').forEach(function(b){
+      b.querySelector('[data-amt]').textContent='-'+money(outCost(+b.dataset.annual));
+      var ex=b.querySelector('[data-ex]');if(ex)ex.textContent=badDebt[b.dataset.key]?('+ '+money(badCost(+b.dataset.annual))+' interest'):'';
+    });
+    inEl.querySelectorAll('.chip').forEach(function(b){
+      b.querySelector('[data-amt]').textContent='+'+money(inGain(+b.dataset.base,+b.dataset.g));
+    });
+  }
+
+  function drawChart(target,outImpact,inImpact){
+    var n=Y(), W=600, H=170, pad=4;
+    function path(fn,color,w){
+      var d='';for(var i=0;i<=n;i++){var x=pad+(W-2*pad)*(i/n);var v=fn(i);var y=H-pad-(H-2*pad)*(v/maxV);d+=(i===0?'M':'L')+x.toFixed(1)+' '+y.toFixed(1)+' ';}
+      return '<polyline points="'+d.replace(/[ML]/g,'')+'" fill="none" stroke="'+color+'" stroke-width="'+w+'" stroke-linejoin="round"/>';
+    }
+    // target path: linear-ish glide to target (illustrative baseline)
+    var tgtFn=function(i){return target*(i/n);};
+    var goodFn=function(i){return target*(i/n)+inImpact*(i/n);};
+    var badFn=function(i){return target*(i/n)-outImpact*(i/n);};
+    var maxV=Math.max(target,goodFn(n))*1.08;
+    var svg='';
+    svg+=path(tgtFn,'#9cc9d9',2);
+    if(inImpact>0)svg+=path(goodFn,'#0f6e56',2.5);
+    if(outImpact>0)svg+=path(badFn,'#993c1d',2.5);
+    chart.innerHTML=svg;
+  }
+
+  function update(){
+    tgtV.textContent=money(+tgt.value);yrsV.textContent=Y()+' yrs';rateV.textContent=(+rate.value)+'%';totYrs.textContent=Y();
+    refreshChipAmounts();
+    var target=+tgt.value, outImpact=0, inImpact=0;
+    OUT.forEach(function(it){var k='out'+it[1];if(sel[k]){outImpact+=outCost(it[2]);if(badDebt[k])outImpact+=badCost(it[2]);}});
+    IN.forEach(function(it){var k='in'+it[1];if(sel[k])inImpact+=inGain(it[2],it[3]);});
+    var t=target-outImpact+inImpact;
+    totalEl.textContent=money(t);
+    var d=t-target;
+    if(d===0){deltaEl.textContent='no change yet';deltaEl.style.color='#788c96';totalEl.style.color='#0f6e56';}
+    else if(d>0){deltaEl.textContent='+'+money(d);deltaEl.style.color='#0f6e56';totalEl.style.color='#0f6e56';}
+    else{deltaEl.textContent=money(d);deltaEl.style.color='#993c1d';totalEl.style.color='#993c1d';}
+    drawChart(target,outImpact,inImpact);
+  }
+
+  [tgt,yrs,rate].forEach(function(el){el.addEventListener('input',update);});
+
+  document.getElementById('loadEx').addEventListener('click',function(){
+    tgt.value=1200000;yrs.value=10;rate.value=7;
+    // tick a couple of each to show the trade-off
+    sel={};badDebt={};
+    outEl.querySelectorAll('.chip').forEach(function(b,i){b.classList.remove('on');b.style.background='#f6f9fb';b.style.borderColor='#dfeef3';var cb=b.querySelector('[data-bd]');if(cb)cb.checked=false;});
+    inEl.querySelectorAll('.chip').forEach(function(b){b.classList.remove('on');b.style.background='#f6f9fb';b.style.borderColor='#dfeef3';});
+    // holidays + car ON (one bad-debt), property + shares ON
+    var o=outEl.querySelectorAll('.chip');[0,1].forEach(function(idx){var b=o[idx];sel[b.dataset.key]=true;b.classList.add('on');b.style.background='#fbece7';b.style.borderColor='#cf6411';});
+    var cb0=o[0].querySelector('[data-bd]');if(cb0){cb0.checked=true;badDebt[o[0].dataset.key]=true;}
+    var inc=inEl.querySelectorAll('.chip');[0,1].forEach(function(idx){var b=inc[idx];sel[b.dataset.key]=true;b.classList.add('on');b.style.background='#e1f5ee';b.style.borderColor='#0f6e56';});
+    update();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

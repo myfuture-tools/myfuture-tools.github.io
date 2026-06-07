@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     MyFuture · STANDALONE TOOL · Money Calculators (combi)
+     Two tabs: Mortgage Freedom + Investment Growth. Independent calcs
+     (they do not interact). Brand chrome + Discovery CTA. Host on GitHub Pages.
+     ▼ FMA: illustrative calculators, not advice. Wire https://myfutureplan.zohobookings.com/#/4520372000003432002 + logo. ▼
+     ============================================================ -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Money Calculators | MyFuture</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+  :root{--p:#018ab5;--pd:#004357;--a:#ff914d;--ao:#cf6411;--m:#788c96;--ink:#10262e;--good:#0f6e56;--line:#dfeef3;--bg:#eef2f5;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Montserrat',sans-serif;color:var(--ink);background:var(--bg);line-height:1.55;}
+  .mf-head{background:linear-gradient(135deg,var(--pd),var(--p));padding:14px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .mf-head .brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:1.1rem;}
+  .mf-head .brand .logo{width:30px;height:30px;border-radius:7px;background:var(--a);display:grid;place-items:center;color:#2a1500;font-weight:800;}
+  .mf-head a.book{background:var(--a);color:#2a1500;text-decoration:none;font-weight:800;font-size:.8rem;padding:.55rem 1rem;border-radius:8px;}
+  .wrap{max-width:760px;margin:0 auto;padding:clamp(1.2rem,4vw,2.4rem) 1.1rem 3rem;}
+  .tool{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 12px 40px -24px #00435730;}
+  .tabs{display:flex;background:linear-gradient(135deg,var(--pd),var(--p));}
+  .tabs button{flex:1;font-family:inherit;font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#bcdcea;background:transparent;border:none;padding:14px 10px;cursor:pointer;transition:all .15s;border-bottom:3px solid transparent;}
+  .tabs button.on{color:#fff;border-bottom-color:var(--a);background:#ffffff14;}
+  .body{padding:clamp(1.3rem,3.5vw,2rem);border-left:5px solid var(--a);}
+  .pane{display:none;} .pane.on{display:block;}
+  h1{font-size:clamp(1.3rem,3vw,1.7rem);font-weight:800;color:var(--pd);margin:0 0 .4rem;line-height:1.15;}
+  .sub{font-size:.95rem;color:#46606c;margin:0 0 1.3rem;max-width:60ch;}
+  .field{margin:0 0 1.1rem;}
+  .field label{display:block;font-size:.82rem;font-weight:700;color:var(--pd);margin:0 0 .4rem;}
+  .field .row{display:flex;align-items:center;gap:12px;}
+  .field input[type=range]{flex:1;accent-color:var(--p);}
+  .field .val{font-weight:800;color:var(--p);font-size:1rem;min-width:96px;text-align:right;}
+  .assets{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.1rem;}
+  .asset{flex:1;min-width:90px;text-align:center;background:#f6f9fb;border:1px solid var(--line);border-radius:10px;padding:.6rem .3rem;cursor:pointer;font-family:inherit;transition:all .15s;}
+  .asset.on{background:#e6f4f9;border-color:var(--p);}
+  .asset .nm{font-size:.78rem;font-weight:700;color:var(--pd);} .asset .rt{font-size:.68rem;color:var(--m);margin-top:2px;}
+  .out{margin-top:1rem;background:#f3f8fa;border-radius:12px;padding:1.3rem 1.4rem;}
+  .out .big{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;}
+  .out .stat .lab{font-size:.74rem;color:var(--m);} .out .stat .num{font-size:1.5rem;font-weight:800;color:var(--good);line-height:1.1;}
+  .out .stat.save .num{color:var(--ao);}
+  .out .line{margin-top:1rem;font-size:.92rem;color:#46606c;line-height:1.6;} .out .line b{color:var(--ink);}
+  .out .lab{font-size:.74rem;color:var(--m);} .out #fv{font-size:2rem;font-weight:800;color:var(--good);line-height:1.1;}
+  .out .split{margin-top:.7rem;font-size:.86rem;color:#46606c;} .out .split b{color:var(--ink);}
+  .bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin-top:.8rem;border:1px solid var(--line);}
+  .bar .contrib{background:#9cc9d9;} .bar .growth{background:var(--good);}
+  .barkey{display:flex;gap:16px;margin-top:.5rem;font-size:.72rem;color:var(--m);}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:middle;}
+  .illus{margin-top:1.1rem;border-left:4px solid var(--a);padding:9px 13px;}
+  .illus .t{font-size:.64rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ao);margin:0 0 2px;}
+  .illus .d{font-size:.74rem;color:var(--m);line-height:1.5;margin:0;}
+  .cta{text-align:center;margin-top:1.4rem;}
+  .cta a{display:inline-block;background:var(--a);color:#2a1500;font-weight:800;font-size:1rem;padding:.95rem 2rem;border-radius:11px;text-decoration:none;}
+  .cta .sub2{font-size:.78rem;color:var(--m);margin-top:.7rem;}
+  .mf-foot{background:var(--pd);color:#cfe9f3;text-align:center;padding:1.6rem 1.1rem;font-size:.8rem;line-height:1.6;}
+  .mf-foot a{color:#fff;font-weight:700;text-decoration:none;}
+  .mf-foot .small{color:#7fb4cb;font-size:.72rem;margin-top:.5rem;max-width:60ch;margin-inline:auto;}
+</style>
+</head>
+<body>
+  <header class="mf-head">
+    <div class="brand"><img src="myfuture_logo.svg" alt="MyFuture" style="height:32px;width:auto;display:block;"></div>
+    <a class="book" href="https://myfutureplan.zohobookings.com/#/4520372000003432002" target="_blank" rel="noopener">Book a free Discovery session</a>
+  </header>
+
+  <div class="wrap">
+    <div class="tool">
+      <div class="tabs">
+        <button id="tabM" class="on"><i class="ti ti-home-dollar" aria-hidden="true"></i> Mortgage Freedom</button>
+        <button id="tabI"><i class="ti ti-trending-up" aria-hidden="true"></i> Investment Growth</button>
+      </div>
+
+      <!-- MORTGAGE PANE -->
+      <div class="body pane on" id="paneM">
+        <h1>See what your mortgage really costs - and how fast you could be free</h1>
+        <p class="sub">Banks earn on the interest, so the longer your term, the more they make. Adjust the numbers to see the interest you'll pay - and how much a little extra each week changes things.</p>
+        <div class="field"><label>Loan amount</label><div class="row"><input id="amt" type="range" min="100000" max="1500000" step="10000" value="600000"><span class="val" id="amtV">$600,000</span></div></div>
+        <div class="field"><label>Interest rate (% p.a.)</label><div class="row"><input id="rate" type="range" min="3" max="9" step="0.1" value="6.5"><span class="val" id="rateV">6.5%</span></div></div>
+        <div class="field"><label>Term (years)</label><div class="row"><input id="term" type="range" min="10" max="30" step="1" value="30"><span class="val" id="termV">30 yrs</span></div></div>
+        <div class="field"><label>Extra payment per week</label><div class="row"><input id="extra" type="range" min="0" max="300" step="5" value="50"><span class="val" id="extraV">$50</span></div></div>
+        <div class="out">
+          <div class="big">
+            <div class="stat"><div class="lab">Total interest (standard)</div><div class="num" id="baseInt">$0</div></div>
+            <div class="stat save"><div class="lab">Interest saved with extra</div><div class="num" id="saved">$0</div></div>
+          </div>
+          <div class="line" id="summary"></div>
+        </div>
+        <div class="illus"><p class="t">Illustration only</p><p class="d">A general calculator using simple assumptions (fixed rate, regular repayments). Not advice, not a quote, not specific to you. The real gains often come from how a mortgage is structured - your MyFuture adviser maps that to your MyPlan.</p></div>
+        <div class="cta"><a href="https://myfutureplan.zohobookings.com/#/4520372000003432002" target="_blank" rel="noopener">Talk to a specialist about your mortgage</a><div class="sub2">Free &middot; no-obligation &middot; NZ-based advisers</div></div>
+      </div>
+
+      <!-- INVESTMENT PANE -->
+      <div class="body pane" id="paneI">
+        <h1>See how your money could grow over time</h1>
+        <p class="sub">Saving alone won't get you there - investing lets compound growth do the heavy lifting. Set a regular contribution and timeframe, then compare how different asset classes have grown over the long run.</p>
+        <div class="field"><label>I can invest each week</label><div class="row"><input id="wk" type="range" min="25" max="1000" step="25" value="200"><span class="val" id="wkV">$200</span></div></div>
+        <div class="field"><label>Starting amount (optional)</label><div class="row"><input id="start" type="range" min="0" max="200000" step="5000" value="0"><span class="val" id="startV">$0</span></div></div>
+        <div class="field"><label>Over how many years</label><div class="row"><input id="yrs" type="range" min="5" max="30" step="1" value="15"><span class="val" id="yrsV">15 yrs</span></div></div>
+        <label style="display:block;font-size:.82rem;font-weight:700;color:var(--pd);margin:0 0 .5rem;">Asset class (long-run average)</label>
+        <div class="assets" id="assets"></div>
+        <div class="out">
+          <div class="lab">Estimated value after <span id="yrsLab">15</span> years</div><div id="fv">$0</div>
+          <div class="split">You'd contribute <b id="contribV">$0</b>, and growth would add <b id="growthV">$0</b>.</div>
+          <div class="bar"><div class="contrib" id="barC" style="width:50%"></div><div class="growth" id="barG" style="width:50%"></div></div>
+          <div class="barkey"><span><span class="dot" style="background:#9cc9d9"></span>Your contributions</span><span><span class="dot" style="background:var(--good)"></span>Compound growth</span></div>
+        </div>
+        <div class="illus"><p class="t">Illustration only</p><p class="d">Uses historical long-run average returns (what has happened, not a forecast) compounded monthly. Returns vary, can be negative, and past performance doesn't guarantee future results. Not advice. Your real strategy and risk profile are mapped in your MyPlan.</p></div>
+        <div class="cta"><a href="https://myfutureplan.zohobookings.com/#/4520372000003432002" target="_blank" rel="noopener">Build a real investment plan with a specialist</a><div class="sub2">Free &middot; no-obligation &middot; NZ-based advisers</div></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mf-foot">
+    <div><a href="https://www.myfuture.co.nz" target="_blank" rel="noopener">myfuture.co.nz</a> &middot; Helping everyday Kiwis build financial freedom</div>
+    <div class="small">MyFuture is regulated by the FMA to provide financial advice. This tool is for general illustration only and does not constitute personalised financial advice.</div>
+  </footer>
+
+<script>
+(function(){
+  // tabs
+  var tabM=document.getElementById('tabM'),tabI=document.getElementById('tabI'),paneM=document.getElementById('paneM'),paneI=document.getElementById('paneI');
+  tabM.addEventListener('click',function(){tabM.classList.add('on');tabI.classList.remove('on');paneM.classList.add('on');paneI.classList.remove('on');});
+  tabI.addEventListener('click',function(){tabI.classList.add('on');tabM.classList.remove('on');paneI.classList.add('on');paneM.classList.remove('on');});
+
+  function money(n){return '$'+Math.round(n).toLocaleString();}
+
+  // ---- MORTGAGE ----
+  var amt=document.getElementById('amt'),rate=document.getElementById('rate'),term=document.getElementById('term'),extra=document.getElementById('extra');
+  var amtV=document.getElementById('amtV'),rateV=document.getElementById('rateV'),termV=document.getElementById('termV'),extraV=document.getElementById('extraV');
+  var baseInt=document.getElementById('baseInt'),saved=document.getElementById('saved'),summary=document.getElementById('summary');
+  function amortise(P,r,M){var mr=r/12/100,bal=P,interest=0,months=0;if(M<=bal*mr)return{months:Infinity,totalInterest:Infinity};while(bal>0&&months<1200){var i=bal*mr;interest+=i;bal=bal+i-M;months++;}return{months:months,totalInterest:interest};}
+  function pmt(P,r,n){var mr=r/12/100,m=n*12;return P*mr/(1-Math.pow(1+mr,-m));}
+  function updM(){
+    var P=+amt.value,r=+rate.value,yrs=+term.value,ex=+extra.value;
+    amtV.textContent=money(P);rateV.textContent=r.toFixed(1)+'%';termV.textContent=yrs+' yrs';extraV.textContent=money(ex);
+    var base=pmt(P,r,yrs),stdRun=amortise(P,r,base),exMonthly=base+ex*52/12,exRun=amortise(P,r,exMonthly);
+    baseInt.textContent=money(stdRun.totalInterest);
+    var savedInt=stdRun.totalInterest-exRun.totalInterest,monthsSaved=stdRun.months-exRun.months;
+    saved.textContent=ex>0?money(savedInt):'$0';
+    if(ex>0){var yS=Math.floor(monthsSaved/12),mS=monthsSaved%12;
+      summary.innerHTML='On a '+money(P)+' loan at '+r.toFixed(1)+'%, the standard path costs <b>'+money(stdRun.totalInterest)+'</b> in interest over '+yrs+' years. Adding <b>'+money(ex)+'/week</b> pays it off about <b>'+yS+(yS===1?' year':' years')+(mS?(' '+mS+' months'):'')+' sooner</b> and saves <b>'+money(savedInt)+'</b> in interest.';
+    }else{summary.innerHTML='On a '+money(P)+' loan at '+r.toFixed(1)+'%, you\u2019ll pay <b>'+money(stdRun.totalInterest)+'</b> in interest over '+yrs+' years - often more than the home itself. Try adding a little extra each week to see the difference.';}
+  }
+  [amt,rate,term,extra].forEach(function(el){el.addEventListener('input',updM);});
+  updM();
+
+  // ---- INVESTMENT ----
+  var ASSETS=[['Cash',4],['Fixed interest',5],['Property',7],['Shares',10]],sel=2;
+  var assetsEl=document.getElementById('assets'),wk=document.getElementById('wk'),start=document.getElementById('start'),yrs=document.getElementById('yrs');
+  var wkV=document.getElementById('wkV'),startV=document.getElementById('startV'),yrsV=document.getElementById('yrsV'),yrsLab=document.getElementById('yrsLab');
+  var fv=document.getElementById('fv'),contribV=document.getElementById('contribV'),growthV=document.getElementById('growthV'),barC=document.getElementById('barC'),barG=document.getElementById('barG');
+  ASSETS.forEach(function(a,i){var b=document.createElement('button');b.type='button';b.className='asset'+(i===sel?' on':'');b.innerHTML='<div class="nm">'+a[0]+'</div><div class="rt">'+a[1]+'% p.a.</div>';b.addEventListener('click',function(){sel=i;document.querySelectorAll('.asset').forEach(function(x){x.classList.remove('on');});b.classList.add('on');updI();});assetsEl.appendChild(b);});
+  function updI(){
+    var weekly=+wk.value,P0=+start.value,years=+yrs.value,r=ASSETS[sel][1]/100;
+    wkV.textContent=money(weekly);startV.textContent=money(P0);yrsV.textContent=years+' yrs';yrsLab.textContent=years;
+    var mr=r/12,months=years*12,M=weekly*52/12;
+    var fvStart=P0*Math.pow(1+mr,months),fvContrib=M*((Math.pow(1+mr,months)-1)/mr),total=fvStart+fvContrib;
+    var contributed=P0+M*months,growth=total-contributed;
+    fv.textContent=money(total);contribV.textContent=money(contributed);growthV.textContent=money(growth);
+    var cPct=Math.max(4,Math.min(96,contributed/total*100));barC.style.width=cPct+'%';barG.style.width=(100-cPct)+'%';
+  }
+  [wk,start,yrs].forEach(function(el){el.addEventListener('input',updI);});
+  updI();
+})();
+</script>
+</body>
+</html>
