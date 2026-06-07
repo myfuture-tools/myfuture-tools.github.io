@@ -22,10 +22,7 @@ HTML file (no build step, no dependencies except a CDN icon font + Google Font).
    (replace USERNAME with the GitHub account name)
 
 ## Later: branded domain (optional)
-Point a subdomain like tools.myfuture.co.nz at the GitHub Pages site:
-- In repo Settings -> Pages -> Custom domain, enter tools.myfuture.co.nz
-- Add the DNS record your registrar needs (a CNAME to USERNAME.github.io)
-  - this is a step for whoever manages the myfuture.co.nz DNS.
+See `CUSTOM_DOMAIN_SETUP.md` for the full step-by-step (DNS record details, ordering, verification, troubleshooting, rollback) for pointing `tools.myfuture.co.nz` at this site.
 
 ## Before going live
 - [x] Zoho discovery URL wired (`https://myfutureplan.zohobookings.com/#/4520372000003432002`).
