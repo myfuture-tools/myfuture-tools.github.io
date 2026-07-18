@@ -3,26 +3,38 @@
 Standalone, branded financial tools for everyday Kiwis. Each is a self-contained
 HTML file (no build step, no dependencies except a CDN icon font + Google Font).
 
+**Live:** <https://myfuture-tools.github.io/>
+**Repo:** `myfuture-tools/myfuture-tools.github.io` (GitHub Pages org root site)
+
 ## Files
-- `index.html` - the hub / landing page (links all tools). This is the repo root.
+- `index.html` - the hub / landing page (links all tools). Served at the site root.
 - `lifestyle_wealth_explorer.html` - Lifestyle vs Wealth Explorer
 - `money_calculators.html` - Money Calculators (Mortgage Freedom + Investment Growth tabs)
 - `spending_planner.html` - Spending Planner (budgeting; saves to the device via localStorage)
+- `myfuture_logo.svg` - brand logo, wired into all pages
+- `assets/` - ScoreApp result-page cover images (Toolkit, Planner, Foundations)
 
-## How to host on GitHub Pages (about 5 minutes)
-1. Create a new PUBLIC repo, e.g. `myfuture-tools`.
-2. Upload all four HTML files + this README into the repo (drag and drop in the GitHub web UI is fine).
-3. Repo Settings -> Pages -> Build and deployment -> Source: "Deploy from a branch".
-4. Branch: `main` (or `master`), folder: `/ (root)`. Save.
-5. Wait ~1 minute. Your URLs become:
-   - Hub:        https://USERNAME.github.io/myfuture-tools/
-   - Explorer:   https://USERNAME.github.io/myfuture-tools/lifestyle_wealth_explorer.html
-   - Calculators:https://USERNAME.github.io/myfuture-tools/money_calculators.html
-   - Planner:    https://USERNAME.github.io/myfuture-tools/spending_planner.html
-   (replace USERNAME with the GitHub account name)
+## Live URLs
+- Hub:         https://myfuture-tools.github.io/
+- Explorer:    https://myfuture-tools.github.io/lifestyle_wealth_explorer.html
+- Calculators: https://myfuture-tools.github.io/money_calculators.html
+- Planner:     https://myfuture-tools.github.io/spending_planner.html
 
-## Later: branded domain (optional)
-See `CUSTOM_DOMAIN_SETUP.md` for the full step-by-step (DNS record details, ordering, verification, troubleshooting, rollback) for pointing `tools.myfuture.co.nz` at this site.
+Pages source: `main` branch, `/ (root)`. Because the repo is named
+`myfuture-tools.github.io`, it serves at the org root — so tool paths are
+root-relative (e.g. `/spending_planner.html`), which matches the future custom
+domain exactly.
+
+## Cover images (hosted for ScoreApp)
+- https://myfuture-tools.github.io/assets/myfuture-toolkit.png
+- https://myfuture-tools.github.io/assets/myfuture-planner.png
+- https://myfuture-tools.github.io/assets/financial-freedom-foundations.png
+
+## Later: branded domain (staged, not yet active)
+The `CNAME` file for `tools.myfuture.co.nz` is committed on the **`custom-domain`
+branch**, deliberately kept off `main` so no domain error shows until DNS is live.
+On go-live day, merge `custom-domain` → `main`. Full step-by-step (DNS record,
+ordering, verification, troubleshooting, rollback) in `CUSTOM_DOMAIN_SETUP.md`.
 
 ## Before going live
 - [x] Zoho discovery URL wired (`https://myfutureplan.zohobookings.com/#/4520372000003432002`).
@@ -30,8 +42,8 @@ See `CUSTOM_DOMAIN_SETUP.md` for the full step-by-step (DNS record details, orde
 - [ ] **Awaiting Lara's sign-off** on all figures and the FMA-compliance wording before campaign use.
 
 ## Linking from the Gamma / PDF lead magnet
-Once the URLs are live, paste them into the guide's [TOOL LINK] buttons:
-- Goal-setter / lifestyle section -> lifestyle_wealth_explorer.html
-- Budgeting / lifestyle-costs section -> spending_planner.html
-- Debt & Mortgage section -> money_calculators.html (opens on the Mortgage tab)
-- Wealth Creation section -> money_calculators.html (Investment tab)
+Paste these into the guide's [TOOL LINK] buttons:
+- Goal-setter / lifestyle section -> https://myfuture-tools.github.io/lifestyle_wealth_explorer.html
+- Budgeting / lifestyle-costs section -> https://myfuture-tools.github.io/spending_planner.html
+- Debt & Mortgage section -> https://myfuture-tools.github.io/money_calculators.html (opens on the Mortgage tab)
+- Wealth Creation section -> https://myfuture-tools.github.io/money_calculators.html (Investment tab)
